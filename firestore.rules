@@ -1,0 +1,24 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in [
+          'gayathrishanmugam813@gmail.com',
+          'info@yesyestechnologies.com'
+        ];
+    }
+
+    match /models/{modelId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /galleryItems/{itemId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+  }
+}
